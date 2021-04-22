@@ -13,6 +13,7 @@
     "core-js": "^3.6.5",
     "sass": "^1.32.11",
     "sass-loader": "10.1.1",
+    "valid.js": "^1.2.5",
     "vue": "^2.6.11"
   },
   "devDependencies": {

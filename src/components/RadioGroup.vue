@@ -4,7 +4,7 @@
 <div class="radiogroup">
     <div v-for="item in items" class="item" :key="item.value">
         <b-radio
-          v-model="model"
+          v-model="internalModel"
           :nativeValue="item.value">
           {{item.title}}
         </b-radio>
@@ -16,6 +16,16 @@
 export default {
   name: 'StudyYearSelect',
   props: ["items", "model"],
+  data() {
+    return {
+      internalModel: this.model
+    };
+  },
+  watch: {
+    internalModel() {
+      this.$emit("input", this.internalModel);
+    }
+  }
 }
 </script>
 

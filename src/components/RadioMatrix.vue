@@ -13,7 +13,7 @@
           :key="row.value">
           <td>{{row.title}}</td>
           <td v-for="col in cols" :key="col.value">
-            <b-radio v-model="model" :nativeValue="[row.value, col.value]"></b-radio>
+            <b-radio v-model="internalModel" :nativeValue="[row.value, col.value]"></b-radio>
           </td>
         </tr>
       </tbody>
@@ -25,6 +25,16 @@
 export default {
   name: 'RadioMatrix',
   props: ["rows", "cols", "model"],
+  data() {
+    return {
+      internalModel: this.model
+    };
+  },
+  watch: {
+    internalModel() {
+      this.$emit("input", this.internalModel);
+    }
+  }
 }
 </script>
 

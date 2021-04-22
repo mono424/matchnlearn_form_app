@@ -3,7 +3,7 @@
 <template>
 <div class="courseselect">
     <BTaginput
-      v-model="model"
+      v-model="internalModel"
       :data="filteredCourses"
       ellipsis
       icon="label"
@@ -39,10 +39,18 @@ const allCourses = [
 export default {
   name: 'CourseSelect',
   props: ["model"],
-  data: () => ({
-    search: "",
-    courses: allCourses,
-  }),
+  data() {
+    return {
+      search: "",
+      courses: allCourses,
+      internalModel: this.model
+    };
+  },
+  watch: {
+    internalModel() {
+      this.$emit("input", this.internalModel);
+    }
+  },
   computed: {
     filteredCourses() {
       let { search, model = [] } = this;

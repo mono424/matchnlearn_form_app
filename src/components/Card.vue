@@ -1,6 +1,7 @@
 <template>
-<div :class="{ card: 1, primary }">
+<div :class="{ card: 1, primary, error: !!error }">
     <div class="topbar" v-if="primary"></div>
+    <span v-if="errorDescription" class="error-description">{{errorDescription}}</span>
     <h2>{{title}} <span v-if="required" class="required">*</span></h2>
     <p v-if="description != null" class="description">{{description}}</p>
     <div class="content">
@@ -10,9 +11,24 @@
 </template>
 
 <script setup>
+import constants from '../constants.js';
+const { errors } = constants;
+
 export default {
   name: 'Card',
-  props: ["title", "description", "primary", "required"],
+  props: ["title", "description", "primary", "required", "error"],
+  computed: {
+    errorDescription() {
+      switch(this.error) {
+        case errors.emptyRequired:
+          return "Please fill this required section";
+        case errors.badFormat:
+          return "Please fill this section in the right format";
+        default:
+          return null;
+      }
+    }
+  }
 }
 </script>
 
@@ -26,6 +42,14 @@ export default {
       padding: 25px;
 
       .required {
+        color: red;
+      }
+
+      .error-description {
+        position: absolute;
+        top: 6px;
+        right: 12px;
+        font-size: 12px;
         color: red;
       }
 
@@ -58,6 +82,11 @@ export default {
       &.primary h2 {
         font-size: 32px;
         font-weight: normal;
+      }
+
+      &.error {
+        border: 1px solid red;
+        padding-top: 30px;
       }
     }
 </style>
