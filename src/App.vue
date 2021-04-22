@@ -1,5 +1,11 @@
 <template>
-<div class="wrap">
+<div v-if="done" class="wrap">
+  <Card :primary="true">
+    <Summary />
+  </Card>
+  
+</div>
+<div v-else class="wrap">
   <Card title="Sign me up right now!" :primary="true">
     We timed it, it only takes 1.5 minute to fill out!
     <div class="required-info">
@@ -83,12 +89,14 @@ import Card from './components/Card.vue';
 import RadioGroup from './components/RadioGroup.vue';
 import CourseSelect from './components/CourseSelect.vue';
 import RadioMatrix from './components/RadioMatrix.vue';
+import Summary from './components/Summary.vue';
 
 const { errors } = constants;
 
 export default {
   name: 'App',
   data: () =>  ({
+    done: false,
     isSending: false,
     validationFailed: false,
     validationErrors: {
@@ -196,6 +204,7 @@ export default {
     RadioGroup,
     CourseSelect,
     RadioMatrix,
+    Summary,
   }
 }
 </script>
