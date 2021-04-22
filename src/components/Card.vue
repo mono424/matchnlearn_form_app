@@ -79,9 +79,15 @@ export default {
         font-weight: normal;
       }
 
-      &.primary h2 {
-        font-size: 32px;
-        font-weight: normal;
+      &.primary {
+        h2 {
+          font-size: 32px;
+          font-weight: normal;
+          margin-bottom: 0;
+        }
+        .content {
+          padding-top: 5px;
+        }
       }
 
       &.error {

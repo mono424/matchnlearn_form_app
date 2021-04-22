@@ -2,6 +2,9 @@
 <div class="wrap">
   <Card title="Sign me up right now!" :primary="true">
     We timed it, it only takes 1.5 minute to fill out!
+    <div class="required-info">
+      * Required
+    </div>
   </Card>
 
   <Card title="Email" :required="true" :error="validationErrors.email">
@@ -67,7 +70,8 @@
   </Card>
 
   <div class="actions">
-    <BButton type="is-primary" @click="validate">Sign up</BButton>
+    <div v-if="errorDescription" class="form-error-description">{{ errorDescription }}</div>
+    <BButton type="is-primary" @click="send">Sign up</BButton>
   </div>
 </div>
 </template>
@@ -85,6 +89,7 @@ const { errors } = constants;
 export default {
   name: 'App',
   data: () =>  ({
+    validationFailed: false,
     validationErrors: {
       email: false,
       name: false,
@@ -152,7 +157,21 @@ export default {
       { title: "Electrical Engineering (EI)", value: "ei" },
     ]
   }),
+  computed: {
+    errorDescription() {
+      if (this.validationFailed) return "Failed: Please make sure to fill all fields in the right manner!";
+      return null;
+    }
+  },
   methods: {
+    send() {
+      this.validationFailed = false;
+      this.validate();
+      if (Object.values(this.validationErrors).some(e => !!e)) {
+        this.validationFailed = true;
+        return;
+      }
+    },
     validate() {
       let validationErrors = { ...this.validationErrors };
       validationErrors.email = isValid(this.userInput.email, [util.isEmail, util.isRequired]) ? false : errors.badFormat;
@@ -194,7 +213,19 @@ body {
   max-width: 650px;
 }
 
-.actions {
-  
+.required-info {
+  font-size: 14px;
+  margin-top: 32px;
+  color: red;
+}
+
+.form-error-description {
+  margin: 14px 10px;
+  font-size: 14px;
+  background: #fb6262;
+  font-weight: bold;
+  color: white;
+  border-radius: 18px;
+  padding: 5px 20px;
 }
 </style>
