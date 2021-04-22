@@ -71,7 +71,7 @@
 
   <div class="actions">
     <div v-if="errorDescription" class="form-error-description">{{ errorDescription }}</div>
-    <BButton type="is-primary" @click="send">Sign up</BButton>
+    <BButton :loading="isSending" type="is-primary" @click="send">Sign up</BButton>
   </div>
 </div>
 </template>
@@ -89,6 +89,7 @@ const { errors } = constants;
 export default {
   name: 'App',
   data: () =>  ({
+    isSending: false,
     validationFailed: false,
     validationErrors: {
       email: false,
