@@ -15,7 +15,7 @@
 
   <Card title="Email" :required="true" :error="validationErrors.email">
     <BField :type="validationErrors.email ? 'is-danger' : ''">
-      <BInput v-model="userInput.email" placeholder="max.mustermann@gmail.com" rounded></BInput>
+      <BInput v-model="userInput.email" placeholder="max.mustermann@gmail.com" name="email" rounded></BInput>
     </BField>
   </Card>
 
@@ -45,13 +45,13 @@
 
   <Card title="What shall we call you?" :required="true" :error="validationErrors.name">
     <BField :type="validationErrors.name ? 'is-danger' : ''">
-      <BInput v-model="userInput.name" placeholder="Max Mustermann" rounded></BInput>
+      <BInput name="name" v-model="userInput.name" placeholder="Max Mustermann" rounded></BInput>
     </BField>
   </Card>
 
   <Card title="Phone Number" description="Please provide your Whatsapp number, so once there is a match, we can put you in a group" :error="validationErrors.phoneNumber" :required="true">
     <BField :type="validationErrors.phoneNumber ? 'is-danger' : ''">
-      <BInput v-model="userInput.phoneNumber" placeholder="+49 44 444444444" rounded></BInput>
+      <BInput name="phone" v-model="userInput.phoneNumber" placeholder="+49 44 444444444" rounded></BInput>
     </BField>
   </Card>
 
@@ -77,6 +77,7 @@
 
   <div class="actions">
     <div v-if="errorDescription" class="form-error-description">{{ errorDescription }}</div>
+    <div v-if="submitError != null" class="form-error-description">{{ submitError.message }}</div>
     <BButton :loading="isSending" type="is-primary" @click="send">Sign up</BButton>
   </div>
 </div>
@@ -84,12 +85,13 @@
 
 <script setup>
 import { string, util, isValid } from 'valid.js'
-import constants from './constants.js';
+import constants from './constants';
 import Card from './components/Card.vue';
 import RadioGroup from './components/RadioGroup.vue';
 import CourseSelect from './components/CourseSelect.vue';
 import RadioMatrix from './components/RadioMatrix.vue';
 import Summary from './components/Summary.vue';
+import ApiService from './services/api';
 
 const { errors } = constants;
 
@@ -99,6 +101,7 @@ export default {
     done: false,
     isSending: false,
     validationFailed: false,
+    submitError: null,
     validationErrors: {
       email: false,
       name: false,
@@ -173,13 +176,27 @@ export default {
     }
   },
   methods: {
-    send() {
+    async send() {
+      this.submitError = null;
       this.validationFailed = false;
+      this.loading = true;
+
+      // Validation
       this.validate();
       if (Object.values(this.validationErrors).some(e => !!e)) {
         this.validationFailed = true;
+        this.loading = false;
         return;
       }
+
+      // Sending Request
+      try {
+        await ApiService.createStudent(this.userInput);
+        this.done = true;
+      } catch (error) {
+        this.submitError = error;
+      }
+      this.loading = false;
     },
     validate() {
       let validationErrors = { ...this.validationErrors };
