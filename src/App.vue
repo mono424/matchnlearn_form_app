@@ -128,6 +128,7 @@ export default {
       favWayOfLeanrning: "",
       peoplePreference: "",
       groupSize: null,
+      comment: "",
     },
     groupSizes: [
       { title: "2", value: "2" },
@@ -191,7 +192,19 @@ export default {
 
       // Sending Request
       try {
-        await ApiService.createStudent(this.userInput);
+        let payload = {
+          ...this.userInput,
+          phoneNumber: this.userInput.phoneNumber.replace(/\\s/, ""),
+          studyStatus: { degree: this.userInput.studyStatus[0], year: this.userInput.studyStatus[1] }
+        };
+        
+        for (const key in payload) {
+          if (Object.hasOwnProperty.call(payload, key) && payload[key] === "") {
+            delete payload[key];
+          }
+        }
+
+        await ApiService.createStudent(payload);
         this.done = true;
       } catch (error) {
         this.submitError = error;
