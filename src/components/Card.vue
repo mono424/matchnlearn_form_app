@@ -2,7 +2,7 @@
 <div :class="{ card: 1, primary, error: !!error }">
     <div class="topbar" v-if="primary"></div>
     <span v-if="errorDescription" class="error-description">{{errorDescription}}</span>
-    <h2>{{title}} <span v-if="required" class="required">*</span></h2>
+    <h2 v-if="title">{{title}} <span v-if="required" class="required">*</span></h2>
     <p v-if="description != null" class="description">{{description}}</p>
     <div class="content">
         <slot />

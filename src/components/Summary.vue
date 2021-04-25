@@ -8,7 +8,7 @@
     />
     <h2>Well Done!</h2>
     <div class="content">
-      You have been successfully signed up. After our algorithm has matched you with other students, you will be automatically added to a WhatsApp-Group.
+      <slot></slot>
     </div>
 </div>
 </template>

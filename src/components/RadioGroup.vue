@@ -3,11 +3,11 @@
 <template>
 <div class="radiogroup">
     <div v-for="item in items" class="item" :key="item.value">
-        <b-radio
+        <BRadio
           v-model="internalModel"
           :nativeValue="item.value">
           {{item.title}}
-        </b-radio>
+        </BRadio>
     </div>
 </div>
 </template>

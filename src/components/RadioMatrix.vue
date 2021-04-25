@@ -13,7 +13,7 @@
           :key="row.value">
           <td>{{row.title}}</td>
           <td v-for="col in cols" :key="col.value">
-            <b-radio v-model="internalModel" :nativeValue="[row.value, col.value]"></b-radio>
+            <BRadio v-model="internalModel" :nativeValue="[row.value, col.value]"></BRadio>
           </td>
         </tr>
       </tbody>
