@@ -198,13 +198,13 @@ export default {
     async send() {
       this.submitError = null;
       this.validationFailed = false;
-      this.loading = true;
+      this.isSending = true;
 
       // Validation
       this.validate();
       if (Object.values(this.validationErrors).some(e => !!e)) {
         this.validationFailed = true;
-        this.loading = false;
+        this.isSending = false;
         return;
       }
 
@@ -227,7 +227,7 @@ export default {
       } catch (error) {
         this.submitError = error;
       }
-      this.loading = false;
+      this.isSending = false;
     },
     validate() {
       let validationErrors = { ...this.validationErrors };
