@@ -79,7 +79,7 @@ export default {
       return courses
         .filter(c => model.findIndex(x => x._id == c._id) < 0)
         .map(c => ({ ...c, title: c.names[0], _search: c.names.join() }))
-        .filter(c => search == "" || c !== c.replace(search, ""))
+        .filter(c => search == "" || c._search !== c._search.replace(search, ""))
     }
   },
   methods: {
