@@ -8,5 +8,9 @@ export default {
 
     createStudent(payload) {
         return this.client.post("student", payload);
+    },
+
+    getCourses() {
+        return this.client.get("courses");
     }
 };

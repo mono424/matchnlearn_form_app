@@ -76,7 +76,7 @@
 
   <Card :error="validationErrors.confirm" :required="true">
     <ConfirmBox v-model="confirm">
-      I confirm that I would like to find study partners for the following courses: ({{ this.userInput.courses.join(", ") }}).<br>
+      I confirm that I would like to find study partners for the following courses: ({{ this.userInput.courses.map(c => c.title).join(", ") }}).<br>
       If I no longer wish to be matched or changed my courses, I will inform MatchNLearn team via a quick whatsapp message.
     </ConfirmBox>
   </Card>
@@ -212,6 +212,7 @@ export default {
       try {
         let payload = {
           ...this.userInput,
+          courses: this.userInput.courses.map(c => c._id),
           phoneNumber: this.userInput.phoneNumber.replace(/\\s/, ""),
           studyStatus: { degree: this.userInput.studyStatus[0], year: this.userInput.studyStatus[1] }
         };
