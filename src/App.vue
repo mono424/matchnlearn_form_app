@@ -6,7 +6,8 @@
       If you don't receive it within the next hour, you might have written the wrong number and please fill out the form again with a phone number that is connected to your Whatsapp account. 
       <br><br>
       <b>As the next step</b>, we will match you with people in our pool based on your preferences.
-      You will likely be matched within the next 3 days.
+      Most people get matched within 7 days of the registration, however, this can take longer if you take a rare course.
+      Share this with your friends, so we can match more people and more courses!
       Once we find you a match, we will send you a link that invites you to a WA group with your learning partner(s).
       <br><br>
       Please inform us if you no longer wish to be matched ...
