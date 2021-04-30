@@ -67,7 +67,7 @@
 
   <Card title="Phone number (WA)" description="Please provide your Whatsapp number, so once there is a match, we can put you in a group" :error="validationErrors.phoneNumber" :required="true">
     <BField :type="validationErrors.phoneNumber ? 'is-danger' : ''">
-      <BInput name="phone" v-model="userInput.phoneNumber" placeholder="+49 44 444444444" rounded></BInput>
+      <BInput name="phone" v-model="userInput.phoneNumber" placeholder="+49 1511 1111111" rounded></BInput>
     </BField>
   </Card>
 
@@ -187,6 +187,7 @@ export default {
       { title: "School of Management (WI)", value: "wi" },
       { title: "Mechanical Engineering (MW)", value: "mw" },
       { title: "Electrical Engineering (EI)", value: "ei" },
+      { title: "Other", value: "other" },
     ]
   }),
   computed: {
@@ -239,7 +240,7 @@ export default {
         ? false 
         : errors.badFormat;
       validationErrors.faculty = this.userInput.faculty !== null  ? false : errors.emptyRequired;
-      validationErrors.courses = this.userInput.courses.length > 0  ? false : errors.emptyRequired;
+      validationErrors.courses = this.userInput.courses.length > 0  ? ((this.userInput.courses.length > 4) ? errors.tooMany : false) : errors.emptyRequired;
       validationErrors.studyStatus = this.userInput.studyStatus.length > 0  ? false : errors.emptyRequired;
       validationErrors.prevSemesterExperience = this.userInput.prevSemesterExperience !== null ? false : errors.emptyRequired;
       validationErrors.attitude = this.userInput.attitude !== null ? false : errors.emptyRequired;

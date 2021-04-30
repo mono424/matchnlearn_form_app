@@ -24,6 +24,8 @@ export default {
           return "Please fill this required section";
         case errors.badFormat:
           return "Please fill this section in the right format";
+        case errors.tooMany:
+          return "You have choosen to many items";
         default:
           return null;
       }
