@@ -29,7 +29,7 @@
     </BField>
   </Card>
 
-  <Card title="Which courses do you want to find learning partners for?" description='Choose up to 4 courses (please choose only courses that you take for sure)' :required="true" :error="validationErrors.courses">
+  <Card title="Which courses do you want to find learning partners for?" description='Choose up to 4 courses. Please select one option for each subject you take (if both lecture and exercise exist for a course, please only select the lecture))' :required="true" :error="validationErrors.courses">
     <CourseSelect v-model="userInput.courses" />
   </Card>
 
@@ -154,9 +154,9 @@ export default {
       { title: "Both are fine", value: "both" },
     ],
     groupSizes: [
-      { title: "2", value: "2" },
-      { title: "3", value: "3" },
-      { title: "More than three", value: "3+" },
+      { title: "2", value: "two" },
+      { title: "3", value: "three" },
+      { title: "More than three", value: "three_or_more" },
       { title: "Dont care", value: "dont_care" },
     ],
     attitudes: [
