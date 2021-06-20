@@ -29,50 +29,34 @@
     </BField>
   </Card>
 
-  <Card title="Which courses do you want to find learning partners for?" description='Choose up to 4 courses. Please select one option for each subject you take (if both lecture and exercise exist for a course, please only select the lecture))' :required="true" :error="validationErrors.courses">
+  <Card title="Out of the exams your are preparing for, which of them would you like to find learning partners for?" description='Choose up to 4 courses. Please select one option for each subject you take (if both lecture and exercise exist for a course, please only select the lecture))' :required="true" :error="validationErrors.courses">
     <CourseSelect v-model="userInput.courses" />
   </Card>
 
-  <Card title="What is your faculty?" :required="true" :error="validationErrors.faculty">
-    <RadioGroup :items="faculties" v-model="userInput.faculty" />
+  <Card title="What are your target grades?" :required="true" :error="validationErrors.grades">
+    <p class="big-notice" v-if="courses.length == 0">Please select some courses first</p>
+    <RadioMatrixMulti v-else :rows="courses" :cols="grades" v-model="userInput.grades" />
   </Card>
 
-  <Card title="What is your year of study?" :required="true" :error="validationErrors.studyStatus">
-    <RadioMatrix :rows="degrees" :cols="years" v-model="userInput.studyStatus" />
-  </Card>
-
-  <Card title="How did you perceive the previous semester?" :required="true" :error="validationErrors.prevSemesterExperience">
-    <RadioGroup :items="experiences" v-model="userInput.prevSemesterExperience" />
-  </Card>
-
-  <Card title="What is your general attitude towards the coursework at the university?" :required="true" :error="validationErrors.attitude">
-    <RadioGroup :items="attitudes" v-model="userInput.attitude" />
-  </Card>
-
-  <Card title="What is your preferred language in a group?" :required="true" :error="validationErrors.language">
-    <RadioGroup :items="languages" v-model="userInput.language" />
-  </Card>
-
-  <Card title="What is your preferred group size?" description="Science shows groups of two or three are most effective for discussion-based learning" :error="validationErrors.groupSize" :required="true">
-    <RadioGroup :items="groupSizes" v-model="userInput.groupSize" />
-  </Card>
-
-  <Card title="What are your preferences regarding your learning groups?" description="tick all that applies" :required="false">
-    <CheckGroup :items="preferences" v-model="userInput.preferences" />
-  </Card>
-
-  <Card title="Would you like to get matched with people from other study programs that study the same course?" :error="validationErrors.programScope" :required="true">
-    <RadioGroup :items="programScopes" v-model="userInput.programScope" />
+  <Card title="How far are you in terms of the preperation?"
+    :required="true"
+    :error="validationErrors.preparation"
+  >
+    <p class="description">
+      <b>A</b>: I am through with the content, and am now working through old exams<br>
+      <b>B</b>: I watched all the lectures, and completed most of the homework<br>
+      <b>C</b>: I am up-to-date with watching the lectures, but did no exercises so far<br>
+      <b>D</b>: I did some work<br>
+      <b>E</b>: I did nothing so far
+    </p>
+    <p class="big-notice" v-if="courses.length == 0">Please select some courses first</p>
+    <RadioMatrixMulti v-else :rows="courses" :cols="preparation" v-model="userInput.preparation" />
   </Card>
 
   <Card title="Phone number (WA)" description="Please provide your Whatsapp number, so once there is a match, we can put you in a group" :error="validationErrors.phoneNumber" :required="true">
     <BField :type="validationErrors.phoneNumber ? 'is-danger' : ''">
       <BInput name="phone" v-model="userInput.phoneNumber" placeholder="+49 1511 1111111" rounded></BInput>
     </BField>
-  </Card>
-
-  <Card title="Any other comments you'd like to add?" :required="false">
-    <BInput v-model="userInput.comment" placeholder="" rounded></BInput>
   </Card>
 
   <Card :error="validationErrors.confirm" :required="true">
@@ -94,10 +78,8 @@
 import { string, util, isValid } from 'valid.js'
 import constants from './constants';
 import Card from './components/Card.vue';
-import RadioGroup from './components/RadioGroup.vue';
 import CourseSelect from './components/CourseSelect.vue';
-import RadioMatrix from './components/RadioMatrix.vue';
-import CheckGroup from './components/CheckGroup.vue';
+import RadioMatrixMulti from './components/RadioMatrixMulti.vue';
 import ConfirmBox from './components/ConfirmBox.vue';
 import Summary from './components/Summary.vue';
 import ApiService from './services/api';
@@ -115,85 +97,45 @@ export default {
     validationErrors: {
       name: false,
       phoneNumber: false,
-      faculty: false,
-      language: false,
-      programScope: false,
       courses: false,
-      studyStatus: false,
-      prevSemesterExperience: false,
-      attitude: false,
-      groupSize: false,
+      grades: false,
+      preparation: false,
       confirm: false,
     },
     userInput: {
       name: "",
       phoneNumber: "",
-      faculty: null,
-      language: null,
-      programScope: null,
-      preferences: [],
       courses: [],
-      studyStatus: [],
-      prevSemesterExperience: null,
-      attitude: null,
-      groupSize: null,
-      comment: "",
+      grades: {},
+      preparation: {}
     },
-    preferences: [
-      { title: "Study sessions should be fun", value: "fun" },
-      { title: "Productivity is paramount", value: "productivity" },
-      { title: "I am in Munich and I'd like to meet with my peers physically", value: "munich" }
+    grades: [
+      { value: 1, title: "1" },
+      { value: 2, title: "2" },
+      { value: 3, title: "3" },
+      { value: 4, title: "4" },
     ],
-    programScopes: [
-      { title: "Sure, I don't mind", value: "all" },
-      { title: "No, I only want to get to know people from my program", value: "only_my_program" }
-    ],
-    languages: [
-      { title: "German", value: "german" },
-      { title: "English", value: "english" },
-      { title: "Both are fine", value: "both" },
-    ],
-    groupSizes: [
-      { title: "2", value: "two" },
-      { title: "3", value: "three" },
-      { title: "More than three", value: "three_or_more" },
-      { title: "Dont care", value: "dont_care" },
-    ],
-    attitudes: [
-      { title: "I absolutely love what I am learning, thus I often go beyond course requirement 🤟", value: "learning_lover" },
-      { title: "I want to score the highest grade possible, and am willing to do whatever it takes ✊", value: "score_chaser" },
-      { title: "I wanna do well in an efficient manner 👌", value: "efficient" },
-      { title: "I wanna pass 🙏", value: "pass_prayer" },
-    ],
-    experiences: [
-      { title: "Easy peasy 😁", value: "easy" },
-      { title: "Alright 😐", value: "alright" },
-      { title: "Difficult 😥", value: "difficult" },
-      { title: "I was struggling a lot 😵", value: "struggeling" },
-      { title: "This is my first semester in my current studies", value: "first_semester" },
-    ],
-    degrees: [
-      { title: "Bachelors", value: "ba" },
-      { title: "Masters", value: "ma" },
-    ],
-    years: [
-      { title: "1st Year", value: "1" },
-      { title: "2nd Year", value: "2" },
-      { title: "3rd Year", value: "3" },
-      { title: "4th Year or above", value: "4+" },
-    ],
-    faculties: [
-      { title: "Informatics (IN)", value: "in" },
-      { title: "School of Management (WI)", value: "wi" },
-      { title: "Mechanical Engineering (MW)", value: "mw" },
-      { title: "Electrical Engineering (EI)", value: "ei" },
-      { title: "Other", value: "other" },
+    preparation: [
+      { value: "A", title: "A" },
+      { value: "B", title: "B" },
+      { value: "C", title: "C" },
+      { value: "D", title: "D" },
+      { value: "E", title: "E" },
     ]
   }),
   computed: {
     errorDescription() {
       if (this.validationFailed) return "Failed: Please make sure to fill all fields in the right manner!";
       return null;
+    },
+    courses() {
+      return this.userInput.courses.map(c => {
+        console.log(c);
+        return {
+          value: c._id,
+          title: c.title,
+        };
+      })
     }
   },
   methods: {
@@ -216,7 +158,6 @@ export default {
           ...this.userInput,
           courses: this.userInput.courses.map(c => c._id),
           phoneNumber: this.userInput.phoneNumber.replace(/\\s/, ""),
-          studyStatus: { degree: this.userInput.studyStatus[0], year: this.userInput.studyStatus[1] }
         };
         
         for (const key in payload) {
@@ -241,24 +182,18 @@ export default {
         : errors.badFormat;
       validationErrors.faculty = this.userInput.faculty !== null  ? false : errors.emptyRequired;
       validationErrors.courses = this.userInput.courses.length > 0  ? ((this.userInput.courses.length > 4) ? errors.tooMany : false) : errors.emptyRequired;
-      validationErrors.studyStatus = this.userInput.studyStatus.length > 0  ? false : errors.emptyRequired;
-      validationErrors.prevSemesterExperience = this.userInput.prevSemesterExperience !== null ? false : errors.emptyRequired;
-      validationErrors.attitude = this.userInput.attitude !== null ? false : errors.emptyRequired;
-      validationErrors.groupSize = this.userInput.groupSize !== null ? false : errors.emptyRequired;
-      validationErrors.language = this.userInput.language !== null ? false : errors.emptyRequired;
-      validationErrors.programScope = this.userInput.programScope !== null ? false : errors.emptyRequired;
+      validationErrors.grades = Object.values(this.userInput.grades).filter(x => x).length != this.userInput.courses.length ? errors.emptyRequired : null;
+      validationErrors.preparation = Object.values(this.userInput.preparation).filter(x => x).length != this.userInput.courses.length ? errors.emptyRequired : null;
       validationErrors.confirm = !this.confirm ? errors.emptyRequired : false;
       this.validationErrors = validationErrors;
-      console.log(this.validationErrors)
+      console.log(this.validationErrors);
     }
   },
   components: {
     Card,
-    RadioGroup,
     CourseSelect,
-    RadioMatrix,
+    RadioMatrixMulti,
     Summary,
-    CheckGroup,
     ConfirmBox,
   }
 }
@@ -282,6 +217,12 @@ body {
   font-size: 14px;
   margin-top: 32px;
   color: red;
+}
+
+.big-notice {
+  text-align: center;
+  color: gray;
+  font-style: italic;
 }
 
 .form-error-description {

@@ -13,7 +13,7 @@
           :key="row.value">
           <td>{{row.title}}</td>
           <td v-for="col in cols" :key="col.value">
-            <BRadio v-model="internalModel" :nativeValue="[row.value, col.value]"></BRadio>
+            <BRadio v-model="internalModel[row.value]" :nativeValue="col.value"></BRadio>
           </td>
         </tr>
       </tbody>
@@ -23,16 +23,15 @@
 
 <script setup>
 export default {
-  name: 'RadioMatrix',
+  name: 'RadioMatrixMulti',
   props: ["rows", "cols", "model"],
   data() {
     return {
-      internalModel: this.model
+      internalModel: (this.model || {}),
     };
   },
   watch: {
     internalModel() {
-      console.log(this.internalModel);
       this.$emit("input", this.internalModel);
     }
   }
