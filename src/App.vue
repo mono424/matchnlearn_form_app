@@ -130,7 +130,6 @@ export default {
     },
     courses() {
       return this.userInput.courses.map(c => {
-        console.log(c);
         return {
           value: c._id,
           title: c.title,
